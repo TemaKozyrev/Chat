@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
+import _ from 'lodash';
 import APIError from '../helpers/APIError';
 
 const ChannelSchema = new mongoose.Schema({
@@ -40,6 +41,22 @@ ChannelSchema.statics = {
         const err = new APIError('No such channel exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
+  },
+
+  checkUser(userId, channelId) {
+    return this.findById(channelId)
+      .exec()
+      .then((channel) => {
+        if (channel) {
+          if (channel._creator == userId || _.includes(channel.members, userId)) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      })
   },
 
   list({ skip = 0, limit = 50, id }) {
