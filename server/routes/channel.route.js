@@ -1,7 +1,5 @@
 import express from 'express';
-import expressJwt from 'express-jwt';
 import validate from 'express-validation';
-import config from '../../config/config';
 import paramValidation from '../../config/param-validation';
 import channelCtrl from '../controllers/channel.controller';
 
@@ -11,6 +9,13 @@ router.route('/')
   .get(channelCtrl.list)
 
   .post(channelCtrl.create); // TODO add validation
+
+router.route('/:channelId')
+  .get(channelCtrl.get)
+
+  .delete(channelCtrl.remove)
+
+  .put(channelCtrl.update);
 
 router.param('channelId', channelCtrl.load);
 
